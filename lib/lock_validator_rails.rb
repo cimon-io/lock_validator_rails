@@ -1,5 +1,10 @@
-require "lock_validator_rails/version"
+require 'lock_validator_rails/version'
+require 'active_record'
 
 module LockValidatorRails
-  # Your code goes here...
+  class LockValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      record.errors[attribute] << (options[:message] || 'wrong email address')
+    end
+  end
 end
