@@ -32,5 +32,14 @@ describe LockValidatorRails do
       is_expected.to receive(:add).with(:base, :outdated)
       instance.valid?
     end
+
+    context 'when instance with changed fields' do
+      it 'adds errors for changed attributes' do
+        allow(instance).to receive(:changes).and_return(updated_at: [])
+        is_expected.to receive(:add).with(:updated_at, :changed)
+        is_expected.to receive(:add).with(:base, :outdated)
+        instance.valid?
+      end
+    end
   end
 end
