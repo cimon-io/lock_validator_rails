@@ -6,6 +6,8 @@ module LockValidatorRails
     def validate_each(record, attribute, value)
       compare = options.fetch(:compare, ->(_, value, lock_value) { value == lock_value })
       return if compare[record, value, record.public_send("#{attribute}_lock")]
+
+      record.changes.keys.each { |name| record.errors.add(name, :changed) }
       record.errors.add(:base, :outdated)
     end
   end
