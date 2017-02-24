@@ -3,18 +3,10 @@ require 'active_record'
 
 module LockValidatorRails
   class LockValidator < ActiveModel::EachValidator
-
-    def initialize(options)
-      options[:message] ||= :is_outdated
-      options[:with] ||= :updated_at
-      options[:normalizer] ||= :to_microseconds
-      super
-    end
-
     def validate_each(record, attribute, value)
-      return if record.public_send(options[:normalizer], options[:with]) == value
-      error_key = options.fetch(:error_key, attribute)
-      record.errors.add(error_key, :outdated, message: options[:message])
+      compare = options.fetch(:compare, ->(_, value, lock_value) { value == lock_value })
+      return if compare[record, value, record.public_send("#{attribute}_lock")]
+      record.errors.add(:base, :outdated)
     end
   end
 end
