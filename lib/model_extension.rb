@@ -1,7 +1,7 @@
 module ModelExtension
   def method_missing(method_name, *arguments, &block)
     /\A(?<name>.+)_lock=?\z/ =~ method_name.to_s
-    super if !name || !respond_to?(name)
+    return super if !name
 
     self.class.send(:attr_accessor, :"#{name}_lock")
     public_send(method_name, *arguments, &block)

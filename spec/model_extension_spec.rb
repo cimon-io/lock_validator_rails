@@ -20,5 +20,13 @@ describe ModelExtension do
       subject.updated_at_lock = '123'
       expect(subject.updated_at_lock).to eq('123')
     end
+
+    context '#method_missing' do
+      it 'no attr_accessor call if super is called' do
+        expect_any_instance_of(ActiveModel::Model).to receive(:method_missing).with(:user_id).once
+        expect(instance).not_to receive(:attr_accessor)
+        instance.user_id
+      end
+    end
   end
 end
