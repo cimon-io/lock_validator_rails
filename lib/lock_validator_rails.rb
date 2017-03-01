@@ -14,3 +14,5 @@ module LockValidatorRails
     end
   end
 end
+
+ActiveRecord::Base.send(:include, LockValidatorRails)
