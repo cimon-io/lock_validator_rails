@@ -35,5 +35,16 @@ describe LockValidatorRails do
       is_expected.to receive(:add).with(:base, :outdated)
       instance.valid?
     end
+
+    context 'when :updated_at is changed from valid value' do
+      before do
+        allow(type_for_attribute).to receive(:deserialize).and_return(updated_at)
+        allow(instance).to receive(:changes).and_return(updated_at: [updated_at, nil])
+      end
+
+      subject { instance }
+
+      it { is_expected.to be_valid }
+    end
   end
 end
